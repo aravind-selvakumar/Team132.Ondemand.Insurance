@@ -13,7 +13,21 @@ builder.Services.AddDbContext<InsuranceContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//CORS.1: Add services to the container for managing CORS.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+
+        builder => builder.WithOrigins("http://localhost:3000")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+
+});
+
 var app = builder.Build();
+
+// CORS.2: Allow App to use the CORS policy set earlier
+app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -22,7 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
